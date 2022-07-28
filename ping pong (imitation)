@@ -1,0 +1,89 @@
+import turtle
+from random import choice
+#Окно
+window = turtle.Screen()
+window.title("Ping-Pong")
+window.setup(width = 1.0, height = 1.0)
+window.bgcolor("white")
+
+#игровое поле
+border = turtle.Turtle()
+border.speed(5) #скорость отрисовки
+border.color('black')
+border.begin_fill()
+border.goto(-600, 400)
+border.goto(600, 400)
+border.goto(600, -400)
+border.goto(-600, -400)
+border.goto(-600, 400)
+border.end_fill()
+
+#разделяющая линия
+border.goto(0, 400)
+border.color('white')
+border.goto(0, -400)
+
+#ракетки
+rocket_a = turtle.Turtle()
+rocket_a.color("white")
+rocket_a.shape('square')
+rocket_a.shapesize(stretch_len=1, stretch_wid=5)
+rocket_a.penup()
+rocket_a.goto(-550, 0)
+
+rocket_b = turtle.Turtle()
+rocket_b.color("white")
+rocket_b.shape('square')
+rocket_b.shapesize(stretch_len=1, stretch_wid=5)
+rocket_b.penup()
+rocket_b.goto(550, 0)
+
+
+#мяч
+ball = turtle.Turtle()
+ball.shape("circle")
+ball.speed(0)
+ball.color('white')
+ball.dx = 6
+ball.dy = 6
+ball.penup() #убирает след
+
+while True:
+    window.update()    
+
+    ball.setx(ball.xcor() + ball.dx) #новая координата(текущая координата + скорость смещения)
+    ball.sety(ball.ycor() + ball.dy)
+
+    #проверка на встречу с границами поля
+    if ball.ycor() >= 390:
+        ball.dy = -ball.dy
+
+    if ball.ycor() <= -390:
+        ball.dy = -ball.dy   
+
+    if ball.xcor() >= 590:
+        ball.goto(0, 0)
+        ball.dx = choice([-4, -3, -2, 2, 3, 4])
+        ball.dy = choice([-4, -3, -2, 2, 3, 4])
+
+    if ball.xcor() <= -590:
+        ball.goto(0, 0)
+        ball.dx = choice([-4, -3, -2, 2, 3, 4])
+        ball.dy = choice([-4, -3, -2, 2, 3, 4])
+    
+    #if ball.xcor() > 0:
+    rocket_b.sety( ball.ycor())
+
+    #if ball.xcor() < 0:
+    rocket_a.sety( ball.ycor())
+
+
+    #проверка на встречу с рокетками
+    if ball.ycor() >= rocket_b.ycor() - 50 and ball.ycor() <= rocket_b.ycor() + 50 \
+        and ball.xcor() >= rocket_b.xcor() - 5 and ball.xcor() <= rocket_b.xcor() + 5:
+        ball.dx = -ball.dx
+
+    if ball.ycor() >= rocket_a.ycor() - 50 and ball.ycor() <= rocket_a.ycor() + 50 \
+        and ball.xcor() >= rocket_a.xcor() - 5 and ball.xcor() <= rocket_a.xcor() + 5:
+        ball.dx = -ball.dx
+window.mainloop()
